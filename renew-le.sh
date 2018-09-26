@@ -19,7 +19,7 @@ service httpd stop
 # get a new cert
 certbot certonly -n --standalone --email "$EMAIL" -d "$(hostname -f)" --agree-tos
 
-ipa-server-certinstall -w -d "$WORKDIR/0000_cert.pem" "$WORKDIR/0000.cert.crt"
+ipa-server-certinstall -w -d "/etc/letsencrypt/live/$(hostname -f)/privkey.pem" "/etc/letsencrypt/live/$(hostname -f)/cert.pem" 
 
 systemctl restart httpd.service
 systemctl restart dirsrv@*
