@@ -24,6 +24,6 @@ service httpd stop
 # get a new cert
 certbot certonly -n --standalone --email "$EMAIL" -d "$(hostname -f)" --agree-tos
 
-ipa-server-certinstall -w -d "/etc/letsencrypt/live/$(hostname -f)/privkey.pem" "/etc/letsencrypt/live/$(hostname -f)/cert.pem" -p "$DIRMAN_PASSWORD"
+ipa-server-certinstall -w -d "/etc/letsencrypt/live/$(hostname -f)/privkey.pem" "/etc/letsencrypt/live/$(hostname -f)/cert.pem" -p "$DIRMAN_PASSWORD" --pin=
 
 ipactl restart
