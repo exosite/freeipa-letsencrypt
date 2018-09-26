@@ -26,5 +26,4 @@ certbot certonly -n --standalone --email "$EMAIL" -d "$(hostname -f)" --agree-to
 
 ipa-server-certinstall -w -d "/etc/letsencrypt/live/$(hostname -f)/privkey.pem" "/etc/letsencrypt/live/$(hostname -f)/cert.pem" -p "$DIRMAN_PASSWORD"
 
-systemctl restart httpd.service
-systemctl restart dirsrv@*
+ipactl restart
