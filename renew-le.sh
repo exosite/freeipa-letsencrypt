@@ -7,7 +7,7 @@ if [ "$DIRMAN_PASSWORD" == "-xxx" ]
 then
     echo "need directory admin password" && exit 1
 fi
-wl
+
 if [ "${TEST:-no}" == "yes" ]
 then
     EXTRA_CERTBOT_ARG="--test-cert"
