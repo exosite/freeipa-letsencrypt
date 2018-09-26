@@ -1,9 +1,7 @@
 #!/usr/bin/bash
 set -o nounset -o errexit
 
-WORKDIR="${WORKDIR:-/root/ipa-le}"
 EMAIL="${EMAIL:-admin@example.com}"
-cd "$WORKDIR"
 
 ### cron
 # check that the cert will last at least 2 days from now to prevent too frequent renewal
@@ -15,18 +13,11 @@ fi
 
 # cert renewal is needed if we reached this line
 
-# cleanup
-rm -f "$WORKDIR"/*.pem
-rm -f "$WORKDIR"/httpd-csr.*
-
-# generate CSR
-certutil -R -d /etc/httpd/alias/ -k Server-Cert -f /etc/httpd/alias/pwdfile.txt -s "CN=$(hostname -f)" --extSAN "dns:$(hostname -f)" -o "$WORKDIR/httpd-csr.der"
-
 # httpd process prevents letsencrypt from working, stop it
 service httpd stop
 
 # get a new cert
-certbot certonly -n --standalone --csr "$WORKDIR/httpd-csr.der" --email "$EMAIL" --agree-tos
+certbot certonly -n --standalone --email "$EMAIL" -d "$(hostname -f)" --agree-tos
 
 ipa-server-certinstall -w -d "$WORKDIR/0000_cert.pem" "$WORKDIR/0000.cert.crt"
 
