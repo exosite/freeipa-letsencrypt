@@ -26,7 +26,7 @@ certutil -R -d /etc/httpd/alias/ -k Server-Cert -f /etc/httpd/alias/pwdfile.txt 
 service httpd stop
 
 # get a new cert
-certbot certonly -s --standalone --csr "$WORKDIR/httpd-csr.der" --email "$EMAIL" --agree-tos
+certbot certonly -n --standalone --csr "$WORKDIR/httpd-csr.der" --email "$EMAIL" --agree-tos
 
 ipa-server-certinstall -w -d "$WORKDIR/0000_cert.pem" "$WORKDIR/0000.cert.crt"
 
