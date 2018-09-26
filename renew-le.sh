@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 set -o nounset -o errexit
 
-WORKDIR="/root/ipa-le"
-EMAIL=""
-#cd "$WORKDIR"
+WORKDIR="${WORKDIR:-/root/ipa-le}"
+EMAIL="${EMAIL:-admin@example.com}"
+cd "$WORKDIR"
 
 ### cron
 # check that the cert will last at least 2 days from now to prevent too frequent renewal
@@ -26,12 +26,9 @@ certutil -R -d /etc/httpd/alias/ -k Server-Cert -f /etc/httpd/alias/pwdfile.txt 
 service httpd stop
 
 # get a new cert
-letsencrypt certonly --standalone --csr "$WORKDIR/httpd-csr.der" --email "$EMAIL" --agree-tos
+certbot certonly -s --standalone --csr "$WORKDIR/httpd-csr.der" --email "$EMAIL" --agree-tos
 
-# remove old cert
-certutil -D -d /etc/httpd/alias/ -n Server-Cert
-# add the new cert
-certutil -A -d /etc/httpd/alias/ -n Server-Cert -t u,u,u -a -i "$WORKDIR/0000_cert.pem"
+ipa-server-certinstall -w -d "$WORKDIR/0000_cert.pem" "$WORKDIR/0000.cert.crt"
 
-# start httpd with the new cert
-service httpd start
+systemctl restart httpd.service
+systemctl restart dirsrv@*
