@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -o nounset -o errexit
 
-WORKDIR="/root/ipa-le"
+WORKDIR="$(dirname "$0")"
 
 if ! [[ -x "$(command -v certbot)" ]]
 then
