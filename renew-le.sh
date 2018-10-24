@@ -8,9 +8,10 @@ then
     echo "need directory admin password" && exit 1
 fi
 
+EXTRA_CERTBOT_ARG="${EXTRA_CERTBOT_ARG:-}"
 if [ "${TEST:-no}" == "yes" ]
 then
-    EXTRA_CERTBOT_ARG="--test-cert"
+    EXTRA_CERTBOT_ARG="${EXTRA_CERTBOT_ARG} --test-cert"
 fi
 
 ### cron
