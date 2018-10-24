@@ -1,12 +1,15 @@
 #!/usr/bin/bash
 set -o nounset -o errexit
 
-EMAIL="${EMAIL:-admin@example.com}"
-DIRMAN_PASSWORD="${DIRMAN_PASSWORD:-xxx}"
-if [ "$DIRMAN_PASSWORD" == "-xxx" ]
+if [ -z "$DIRMAN_PASSWORD" ]
 then
     echo "need directory admin password" && exit 1
 fi
+if [ -z "$EMAIL" ]
+then
+    echo "need admin email" && exit 1
+fi
+
 
 EXTRA_CERTBOT_ARG="${EXTRA_CERTBOT_ARG:-}"
 if [ "${TEST:-no}" == "yes" ]
@@ -28,7 +31,8 @@ fi
 service httpd stop
 
 # get a new cert
-certbot certonly -n --standalone "$EXTRA_CERTBOT_ARG" --email "$EMAIL" -d "$(hostname -f)" --agree-tos
+# shellcheck disable=SC2086
+certbot certonly -n --standalone ${EXTRA_CERTBOT_ARG} --email "$EMAIL" -d "$(hostname -f)" --agree-tos
 
 ipa-server-certinstall -w -d "/etc/letsencrypt/live/$(hostname -f)/privkey.pem" "/etc/letsencrypt/live/$(hostname -f)/cert.pem" -p "$DIRMAN_PASSWORD" --pin=
 
