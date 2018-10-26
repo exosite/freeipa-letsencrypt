@@ -28,7 +28,7 @@ fi
 # cert renewal is needed if we reached this line
 
 # httpd process prevents letsencrypt from working, stop it
-service httpd stop
+systemctl stop httpd
 
 # get a new cert
 # shellcheck disable=SC2086
